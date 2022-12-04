@@ -1,0 +1,21 @@
+ARG NODE_IMAGE=node:16.16.0-alpine
+ARG APP_PORT=3000
+
+# =====================================
+FROM ${NODE_IMAGE} as builder
+
+WORKDIR /home/app
+
+COPY package*.json /
+
+RUN npm install
+
+COPY . .
+
+RUN cp .env.example .env
+
+RUN npm run build
+
+EXPOSE ${APP_PORT}
+
+CMD ["npm", "start"]
