@@ -13,7 +13,7 @@ class EnvLoadProvider {
     if (error) {
       logger.error(JSON.stringify(error))
     }
-    logger.log(`Env load done!`)
+    logger.log(`Env load of ${process.pid} done!`)
   }
 }
 

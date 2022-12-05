@@ -21,6 +21,9 @@ export class Session extends BaseEntity {
   @Column({ name: 'target_image_url', type: 'text' })
   targetImageUrl: string
 
+  @Column({ type: 'text', nullable: true })
+  email: string
+
   @Column({ name: 'total_images' })
   totalImages: number
 
