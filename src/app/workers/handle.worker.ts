@@ -21,7 +21,7 @@ class HandleWorker {
   }
 
   public async initialize() {
-    handleQueue.process(async (job: Job, done: DoneCallback) => {
+    await handleQueue.process(async (job: Job, done: DoneCallback) => {
       try {
         const { arrayLink, sessionId, targetImage } = plainToInstance(
           WorkerData,

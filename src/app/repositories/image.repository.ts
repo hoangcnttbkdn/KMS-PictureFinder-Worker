@@ -7,15 +7,6 @@ export class ImageRepository extends Repository<Image> {
     super(Image, dataSource.manager)
   }
 
-  public getImagesBySessionId = (sessionId: number) => {
-    return this.find({
-      where: {
-        session: { id: sessionId },
-        isMatched: true,
-      },
-    })
-  }
-
   public updateImage = (
     code: string,
     sessionId: number,

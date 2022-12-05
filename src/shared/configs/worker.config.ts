@@ -8,6 +8,11 @@ const queueConfig: QueueOptions = {
   },
 }
 
-const WORKER_NAME = process.env.WORKER_NAME
+const handleWorkerName = process.env.HANDLE_WORKER_NAME
+export const handleQueue = new Queue(handleWorkerName, queueConfig)
 
-export const handleQueue = new Queue(WORKER_NAME, queueConfig)
+const cronWorkerName = process.env.CRON_WORKER_NAME
+export const cronQueue = new Queue(cronWorkerName, {
+  ...queueConfig,
+  limiter: { max: 1, duration: 300000 },
+})
