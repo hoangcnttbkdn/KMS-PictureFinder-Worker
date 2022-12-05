@@ -43,7 +43,9 @@ export class Image extends BaseEntity {
   })
   updatedAt: Date
 
-  @ManyToOne(() => Session, (session) => session.images)
+  @ManyToOne(() => Session, (session) => session.images, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'session_id' })
   session: Session
 }
