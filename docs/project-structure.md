@@ -1,12 +1,12 @@
 ```
 .
-|   README.md
+│   .env.example
 │   commitlint.config.js
 │   docker-compose.yaml
-│   env.example
 │   nodemon.json
 │   package-lock.json
 │   package.json
+│   README.md
 │   tsconfig.json
 │
 ├───docker
@@ -14,47 +14,40 @@
 │       Dockerfile.prod
 │
 ├───docs
-│       code-convention.md      
+│       code-convention.md
 │       git-branch-convention.md
-│       project-structure.md    
-│
-├───public
-│       favicon.ico
+│       project-structure.md
 │
 └───src
-    │   main.ts
+    │   index.ts
     │
     ├───app
-    │   ├───controllers
-    │   │       home.controller.ts
-    │   │       index.ts
-    │   │
-    │   ├───dtos
-    │   │       index.ts
-    │   │       user.dto.ts
-    │   │
     │   ├───entities
-    │   │       comment.entity.ts
+    │   │       image.entity.ts
     │   │       index.ts
-    │   │       user.entity.ts
-    │   │
-    │   ├───helpers
-    │   ├───middlewares
-    │   │       error.middleware.ts
-    │   │       index.ts
-    │   │       validation.middleware.ts
+    │   │       session.entity.ts
     │   │
     │   ├───repositories
+    │   │       image.repository.ts
     │   │       index.ts
-    │   │       user.repository.ts
+    │   │       session.repository.ts
     │   │
-    │   ├───routers
-    │   │       home.route.ts
+    │   ├───typings
+    │   │       index.ts
+    │   │       response.typing.ts
+    │   │       worker.typing.ts
+    │   │
+    │   ├───utils
+    │   │       function.ts
     │   │       index.ts
     │   │
-    │   └───typings
+    │   └───workers
+    │           cron.worker.ts
+    │           handle.worker.ts
+    │           index.ts
+    │           mail.worker.ts
+    │
     ├───database
-    │   ├───column-transformers
     │   ├───migrations
     │   └───naming-strategies
     │           custom-naming-strategy.ts
@@ -63,13 +56,15 @@
         ├───configs
         │       data-source.config.ts
         │       environment.config.ts
+        │       mail.config.ts
+        │       worker.config.ts
         │
         ├───constants
+        │       enum.constant.ts
         │       environment.constant.ts
         │       index.ts
         │
         └───providers
-                app.provider.ts
                 database.provider.ts
                 env-load.provider.ts
                 index.ts

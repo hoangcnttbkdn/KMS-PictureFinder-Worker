@@ -12,7 +12,7 @@ const handleWorkerName = process.env.HANDLE_WORKER_NAME
 export const handleQueue = new Queue(handleWorkerName, queueConfig)
 
 const cronWorkerName = process.env.CRON_WORKER_NAME
-export const cronQueue = new Queue(cronWorkerName, {
-  ...queueConfig,
-  limiter: { max: 1, duration: 300000 },
-})
+export const cronQueue = new Queue(cronWorkerName, queueConfig)
+
+const mailWorkerName = process.env.MAIL_WORKER_NAME
+export const mailQueue = new Queue(mailWorkerName, queueConfig)

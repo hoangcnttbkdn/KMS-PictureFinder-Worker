@@ -5,7 +5,7 @@ import { Job, DoneCallback } from 'bull'
 import { plainToInstance } from 'class-transformer'
 
 import { ImageRepository, SessionRepository } from '../repositories'
-import { handleQueue } from '../../shared/configs/worker.config'
+import { handleQueue, mailQueue } from '../../shared/configs/worker.config'
 import { WorkerData } from '../typings/worker.typing'
 import { environment } from '../../shared/constants'
 import { sleep, fetchImageFromUrl } from '../utils'
@@ -23,7 +23,7 @@ class HandleWorker {
   public async initialize() {
     await handleQueue.process(async (job: Job, done: DoneCallback) => {
       try {
-        const { arrayLink, sessionId, targetImage } = plainToInstance(
+        const { arrayLink, sessionId, targetImage, email } = plainToInstance(
           WorkerData,
           job.data,
         )
@@ -85,7 +85,10 @@ class HandleWorker {
           })
         }
         await this.sessionRepository.updateStatus(sessionId)
-        logger.log(`Session ID ${sessionId} has done!`)
+        if (email) {
+          await mailQueue.add({ email, sessionId })
+        }
+        logger.log(`[${process.pid}] Session ID ${sessionId} has done!`)
         done()
       } catch (error) {
         logger.error(JSON.stringify(error))
