@@ -16,8 +16,8 @@ export class SessionRepository extends Repository<Session> {
       .execute()
   }
 
-  public getNotFinishedSessions = () => {
-    return this.createQueryBuilder('sessions')
+  public getNotFinishedSessions = (waitingSessionNames: number[]) => {
+    const query = this.createQueryBuilder('sessions')
       .leftJoinAndSelect(
         'sessions.images',
         'images',
@@ -31,6 +31,11 @@ export class SessionRepository extends Repository<Session> {
         'images.url',
       ])
       .where('sessions.isFinished = false')
-      .getMany()
+    if (waitingSessionNames.length > 0) {
+      query
+        .andWhere('sessions.id NOT IN (:...waitingSessionNames)')
+        .setParameters({ waitingSessionNames })
+    }
+    return query.getMany()
   }
 }

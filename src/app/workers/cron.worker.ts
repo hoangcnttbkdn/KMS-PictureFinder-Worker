@@ -24,12 +24,13 @@ class CronWorker {
   public async initialize() {
     await cronQueue.process(async (_job: Job, done: DoneCallback) => {
       try {
-        console.log('checking...')
-        const waitingCount = await handleQueue.getWaitingCount()
-        const notFinishedsessions =
-          await this.sessionRepository.getNotFinishedSessions()
-        if (waitingCount === 0 && notFinishedsessions.length > 0) {
-          for (const item of notFinishedsessions) {
+        console.log('Cron job checking...')
+        const waitingJobs = await handleQueue.getWaiting()
+        const waitingJobNames = waitingJobs.map((job) => +job.name)
+        const notFinishedSessions =
+          await this.sessionRepository.getNotFinishedSessions(waitingJobNames)
+        if (notFinishedSessions.length > 0) {
+          for (const item of notFinishedSessions) {
             const arrayLink = item.images.map((image) => ({
               id: image.code,
               url: image.url,
@@ -40,12 +41,14 @@ class CronWorker {
               targetImage: item.targetImageUrl,
               email: item.email,
             }
-            handleQueue.add(data)
+            handleQueue.add(item.id.toString(), data)
           }
+          console.log('Add job done.')
         }
+        console.log('Cron job checking done!')
         done()
       } catch (error) {
-        logger.error(JSON.stringify(error))
+        logger.error((error as any).message)
       }
     })
   }
