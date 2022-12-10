@@ -11,7 +11,6 @@ const initCron = async () => {
 }
 
 if (cluster.isPrimary) {
-  initCron()
   for (let i = 0; i < +(process.env.PROCESS_NUM || 2); i++) {
     cluster.fork()
   }
@@ -24,4 +23,8 @@ if (cluster.isPrimary) {
   databaseProvider.initialize()
   mailWorker.initialize()
   handleWorker.initialize()
+}
+
+if (cluster.isPrimary) {
+  initCron()
 }

@@ -26,9 +26,15 @@ class CronWorker {
       try {
         console.log('Cron job checking...')
         const waitingJobs = await handleQueue.getWaiting()
-        const waitingJobNames = waitingJobs.map((job) => +job.name)
+        const waitingJobNames = waitingJobs.map((job) => +job.data.sessionId)
+        const activeJobs = await handleQueue.getActive()
+        const activeJobNames = activeJobs.map((job) => +job.data.sessionId)
         const notFinishedSessions =
-          await this.sessionRepository.getNotFinishedSessions(waitingJobNames)
+          await this.sessionRepository.getNotFinishedSessions([
+            ...waitingJobNames,
+            ...activeJobNames,
+          ])
+        console.log(notFinishedSessions)
         if (notFinishedSessions.length > 0) {
           for (const item of notFinishedSessions) {
             const arrayLink = item.images.map((image) => ({
@@ -41,7 +47,7 @@ class CronWorker {
               targetImage: item.targetImageUrl,
               email: item.email,
             }
-            handleQueue.add(item.id.toString(), data)
+            handleQueue.add(data)
           }
           console.log('Add job done.')
         }
