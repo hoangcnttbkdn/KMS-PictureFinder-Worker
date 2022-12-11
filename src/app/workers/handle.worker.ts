@@ -8,7 +8,7 @@ import { ImageRepository, SessionRepository } from '../repositories'
 import { handleQueue, mailQueue } from '../../shared/configs/worker.config'
 import { WorkerData } from '../typings/worker.typing'
 import { environment } from '../../shared/constants'
-import { sleep, fetchImageFromUrl } from '../utils'
+import { sleep, fetchImageFromUrl, fetchImageFromSource } from '../utils'
 import { logger } from '../../shared/providers'
 
 class HandleWorker {
@@ -23,16 +23,14 @@ class HandleWorker {
   public async initialize() {
     await handleQueue.process(async (job: Job, done: DoneCallback) => {
       try {
-        const { arrayLink, sessionId, targetImage, email } = plainToInstance(
-          WorkerData,
-          job.data,
-        )
+        const { arrayLink, sessionId, targetImage, email, type } =
+          plainToInstance(WorkerData, job.data)
         const targetImageBuffer = await fetchImageFromUrl(targetImage)
         const listFormData = []
         let totalBytes = environment.formSizeLimit
         let data = new FormData()
         for (let i = 0; i < arrayLink.length; i++) {
-          const buffer64 = await fetchImageFromUrl(arrayLink[i].url)
+          const buffer64 = await fetchImageFromSource(arrayLink[i], type)
           data.append(
             'list_images',
             Readable.from(buffer64),
