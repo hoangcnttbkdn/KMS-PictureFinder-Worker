@@ -7,15 +7,10 @@ services:
       context: .
       args:
         NODE_IMAGE: ${NODE_IMAGE}
-        APP_PORT: ${APP_PORT}
-    container_name: ${APP_NAME}-app
+    container_name: ${APP_NAME}-worker
     env_file:
       - .env
-    ports:
-      - 3000:${APP_PORT}
     command: sh -c "npm run dev"
     volumes:
       - ./:/home/app
       - ./node_modules:/home/app/node_modules
-    networks:
-      - app_network
