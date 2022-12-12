@@ -89,6 +89,7 @@ class HandleWorker {
         logger.log(`[${process.pid}] Session ID ${sessionId} has done!`)
         done()
       } catch (error) {
+        console.log(error)
         logger.error(JSON.stringify(error))
       }
     })

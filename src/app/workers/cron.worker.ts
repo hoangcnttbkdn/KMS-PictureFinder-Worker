@@ -45,8 +45,8 @@ class CronWorker {
               arrayLink,
               sessionId: item.id,
               targetImage: item.targetImageUrl,
-              email: item.email,
               type: item.type,
+              email: item.email,
             }
             handleQueue.add(data)
           }

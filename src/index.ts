@@ -18,13 +18,10 @@ if (cluster.isPrimary) {
   cluster.on('exit', (_worker, _code, _signal) => {
     cluster.fork()
   })
+  initCron()
 } else {
   envLoadProvider.validate()
   databaseProvider.initialize()
   mailWorker.initialize()
   handleWorker.initialize()
-}
-
-if (cluster.isPrimary) {
-  initCron()
 }
