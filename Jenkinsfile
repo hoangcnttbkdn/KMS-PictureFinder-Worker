@@ -40,7 +40,7 @@ pipeline {
         stage('Deploy: Develop') {
             when {
                 expression {
-                    return (env.BRANCH_NAME == 'develop')
+                    return (env.BRANCH_NAME == 'dev')
                 }
             }
             steps {

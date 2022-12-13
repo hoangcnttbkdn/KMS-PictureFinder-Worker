@@ -13,7 +13,7 @@ class MailWorker {
           to: email,
           from: process.env.MAIL_USER,
           subject: 'Your request session in Picture Finder is finished',
-          text: `Your request session in Picture Finder is finished. You can check it in [...link here...] ${sessionId}.`,
+          text: `Your request session in Picture Finder is finished. You can check it in http://picturesfinder.software/result/${sessionId}`,
         }
         await mailService.sendMail(msg)
         done()
