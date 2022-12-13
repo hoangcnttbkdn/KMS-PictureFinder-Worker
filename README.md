@@ -1,9 +1,11 @@
-# KMS-PictureFinder-BE
+# 19N12 - TEAM 1 - Events: Picture Finders
+# Worker
 
 ## Video demo
 Use this link: [https://youtu.be/_8mVyfxF-9o](https://youtu.be/_8mVyfxF-9o)
 
-![Watch the video](https://youtu.be/_8mVyfxF-9o/maxresdefault.jpg)](https://youtu.be/_8mVyfxF-9o)
+## More information
+More information of project: [Link document](https://docs.google.com/document/d/1MbT5B7fmlTc-TBTIIkfts7OVd-rrcYt-_b2BFACHJXk/edit?usp=share_link)
 
 ## Architecture
 
