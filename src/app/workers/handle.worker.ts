@@ -42,7 +42,9 @@ class HandleWorker {
           if (totalBytes - buffer64.length >= 0 && i !== arrayLink.length - 1) {
             totalBytes -= buffer64.length
           } else {
-            if (typeRecognize !== TypeRecognizeEnum.BIB) {
+            if (typeRecognize === TypeRecognizeEnum.BIB) {
+              data.append('bib_code', target)
+            } else {
               data.append('target_image', Readable.from(target), `target.png`)
             }
             listFormData.push(data)
@@ -54,7 +56,7 @@ class HandleWorker {
         let path = 'face-findor'
         switch (typeRecognize) {
           case TypeRecognizeEnum.BIB:
-            path = `ocr-v2?bib_code=${target}`
+            path = `ocr-v2`
             break
           case TypeRecognizeEnum.CLOTHES:
             path = 'clothes-findor'
