@@ -4,6 +4,7 @@ import { SessionRepository } from '../repositories'
 import { cronQueue, handleQueue } from '../../shared/configs/worker.config'
 import { WorkerData } from '../typings/worker.typing'
 import { logger } from '../../shared/providers'
+import { TypeRecognizeEnum } from '../../shared/constants'
 
 class CronWorker {
   private sessionRepository: SessionRepository
@@ -34,7 +35,7 @@ class CronWorker {
             ...waitingJobNames,
             ...activeJobNames,
           ])
-        console.log(notFinishedSessions)
+        console.log(notFinishedSessions.length)
         if (notFinishedSessions.length > 0) {
           for (const item of notFinishedSessions) {
             const arrayLink = item.images.map((image) => ({
@@ -44,8 +45,12 @@ class CronWorker {
             const data: WorkerData = {
               arrayLink,
               sessionId: item.id,
-              targetImage: item.targetImageUrl,
+              targetData:
+                item.typeRecognize === TypeRecognizeEnum.BIB
+                  ? item.bib
+                  : item.targetImageUrl,
               type: item.type,
+              typeRecognize: item.typeRecognize,
               email: item.email,
             }
             handleQueue.add(data)

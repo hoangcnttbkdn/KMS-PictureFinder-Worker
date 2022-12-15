@@ -26,7 +26,9 @@ export class SessionRepository extends Repository<Session> {
       .select([
         'sessions.id',
         'sessions.targetImageUrl',
+        'sessions.bib',
         'sessions.type',
+        'sessions.typeRecognize',
         'sessions.email',
         'images.code',
         'images.url',
