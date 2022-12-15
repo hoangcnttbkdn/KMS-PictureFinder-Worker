@@ -1,7 +1,27 @@
 import 'dotenv/config'
+import cluster from 'node:cluster'
 import { databaseProvider, envLoadProvider } from './shared/providers'
-import { handleWorker } from './app/workers'
+import { handleWorker, cronWorker, mailWorker } from './app/workers'
 
-envLoadProvider.validate()
-databaseProvider.initialize()
-handleWorker.initialize()
+const initCron = async () => {
+  envLoadProvider.validate()
+  await databaseProvider.initialize()
+  cronWorker.initialize()
+  cronWorker.addJob()
+}
+
+if (cluster.isPrimary) {
+  for (let i = 0; i < +(process.env.PROCESS_NUM || 2); i++) {
+    cluster.fork()
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  cluster.on('exit', (_worker, _code, _signal) => {
+    cluster.fork()
+  })
+  initCron()
+} else {
+  envLoadProvider.validate()
+  databaseProvider.initialize()
+  mailWorker.initialize()
+  handleWorker.initialize()
+}

@@ -7,10 +7,6 @@ export class SessionRepository extends Repository<Session> {
     super(Session, dataSource.manager)
   }
 
-  public getSessionById = (id: number) => {
-    return this.findOne({ where: { id } })
-  }
-
   public updateStatus = (id: number) => {
     return this.createQueryBuilder()
       .update()
@@ -18,5 +14,31 @@ export class SessionRepository extends Repository<Session> {
       .where('id = :id')
       .setParameters({ id })
       .execute()
+  }
+
+  public getNotFinishedSessions = (waitingSessionNames: number[]) => {
+    const query = this.createQueryBuilder('sessions')
+      .leftJoinAndSelect(
+        'sessions.images',
+        'images',
+        'images.session_id = sessions.id and images.recognizedAt isnull',
+      )
+      .select([
+        'sessions.id',
+        'sessions.targetImageUrl',
+        'sessions.bib',
+        'sessions.type',
+        'sessions.typeRecognize',
+        'sessions.email',
+        'images.code',
+        'images.url',
+      ])
+      .where('sessions.isFinished = false')
+    if (waitingSessionNames.length > 0) {
+      query
+        .andWhere('sessions.id NOT IN (:...waitingSessionNames)')
+        .setParameters({ waitingSessionNames })
+    }
+    return query.getMany()
   }
 }
